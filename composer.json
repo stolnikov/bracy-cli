@@ -1,0 +1,24 @@
+{
+  "name": "stolnikov/bracy-cli",
+  "description": "CLI wrapper over stolnikov/bracy package.",
+  "version": "1.0.0",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mikhail Stolnikov",
+      "email": "smartkipper@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.0.0",
+    "symfony/console": "^4.0",
+    "stolnikov/bracy": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "BracyCLI\\": "src"
+    }
+  }
+}
