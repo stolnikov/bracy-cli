@@ -21,27 +21,27 @@ class BalancedBracesCommand extends Command
         $defaultCharsValidator = new CharsValidator();
         $this
             ->setName('chkfile')
-            ->setDescription('Checks for balanced brackets in a text file.')
-            ->addArgument('fpath', InputArgument::REQUIRED, 'Task id.')
+            ->setDescription('Checks for balanced brackets in a text file')
+            ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path.')
             ->addOption(
                 'opening-char',
                 'o',
                 InputOption::VALUE_OPTIONAL,
-                'Opening character.',
+                'Opening character',
                 $defaultBracy->getOpeningChar()
             )
             ->addOption(
                 'closing-char',
                 'c',
                 InputOption::VALUE_OPTIONAL,
-                'Closing character.',
+                'Closing character',
                 $defaultBracy->getClosingChar()
             )
             ->addOption(
                 'allowed-chars',
                 'a',
                 InputOption::VALUE_OPTIONAL,
-                'Closing character.',
+                'String of allowed chars excluding brace characters',
                 $defaultCharsValidator->getAllowedChars()
             );
     }
@@ -54,7 +54,7 @@ class BalancedBracesCommand extends Command
             if (!file_exists($filePath) || !is_file($filePath)) {
                 throw new EmptyContentException(
                     \sprintf(
-                        "File %s not found",
+                        "File %s not found.",
                         $filePath
                     )
                 );
