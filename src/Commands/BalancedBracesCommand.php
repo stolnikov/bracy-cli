@@ -22,7 +22,7 @@ class BalancedBracesCommand extends Command
         $this
             ->setName('chkfile')
             ->setDescription('Checks for balanced brackets in a text file')
-            ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path.')
+            ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path')
             ->addOption(
                 'opening-char',
                 'o',
@@ -54,7 +54,7 @@ class BalancedBracesCommand extends Command
             if (!file_exists($filePath) || !is_file($filePath)) {
                 throw new EmptyContentException(
                     \sprintf(
-                        "File %s not found.",
+                        "The file %s was not found.",
                         $filePath
                     )
                 );
