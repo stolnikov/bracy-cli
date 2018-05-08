@@ -51,7 +51,7 @@ class BalancedBracesCommand extends Command
         $filePath = $input->getArgument('fpath');
 
         try {
-            if (!file_exists($filePath) || !is_file($filePath)) {
+            if (!is_readable($filePath)) {
                 throw new EmptyContentException(
                     \sprintf(
                         "The file %s was not found.",
