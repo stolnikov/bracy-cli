@@ -12,9 +12,9 @@
     }
   ],
   "require": {
-    "php": "^7.0.0",
+    "php": "^7.1",
     "symfony/console": "^4.0",
-    "stolnikov/bracy": "dev-master"
+    "stolnikov/bracy": "dev-code-review"
   },
   "autoload": {
     "psr-4": {

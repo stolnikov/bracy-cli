@@ -17,33 +17,64 @@ class BalancedBracesCommand extends Command
 
     protected function configure()
     {
-        $defaultBracy = new Bracy('()');
-        $defaultCharsValidator = new CharsValidator();
+        // Fetch and initialize default constructor values from validator classes
+        $defaults = $this->getDefaults();
+        list($openingChar, $closingChar, $allowedChars) = $defaults;
+
         $this
             ->setName('chkfile')
-            ->setDescription('Checks for balanced brackets in a text file')
+            ->setDescription('Check for balanced brackets in a text file.')
             ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path')
             ->addOption(
                 'opening-char',
                 'o',
                 InputOption::VALUE_OPTIONAL,
                 'Opening character',
-                $defaultBracy->getOpeningChar()
+                $openingChar
             )
             ->addOption(
                 'closing-char',
                 'c',
                 InputOption::VALUE_OPTIONAL,
                 'Closing character',
-                $defaultBracy->getClosingChar()
+                $closingChar
             )
             ->addOption(
                 'allowed-chars',
                 'a',
                 InputOption::VALUE_OPTIONAL,
                 'String of allowed chars excluding brace characters',
-                $defaultCharsValidator->getAllowedChars()
+                $allowedChars
             );
+    }
+
+    /**
+     * Return default constructor values of validator classes.
+     *
+     * @return array
+     */
+    private function getDefaults(): array
+    {
+        try {
+            $reflectionBracy = new \ReflectionClass(Bracy::class);
+            $defaultOpeningChar = ($reflectionBracy)
+                ->getConstructor()
+                ->getParameters()[1]
+                ->getDefaultValue();
+            $defaultClosingChar = ($reflectionBracy)
+                ->getConstructor()
+                ->getParameters()[2]
+                ->getDefaultValue();
+            $reflectionCharsValidator = new \ReflectionClass(CharsValidator::class);
+            $defaultAllowedChars = ($reflectionCharsValidator)
+                ->getConstructor()
+                ->getParameters()[0]
+                ->getDefaultValue();
+        } catch (\ReflectionException $e) {
+            echo sprintf("<error>%s</error>", $e->getMessage());
+            exit;
+        }
+        return [$defaultOpeningChar, $defaultClosingChar, $defaultAllowedChars];
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -52,16 +83,13 @@ class BalancedBracesCommand extends Command
 
         try {
             if (!is_readable($filePath)) {
-                throw new EmptyContentException(
-                    \sprintf(
-                        "The file %s was not found.",
-                        $filePath
-                    )
+                throw new \RuntimeException(
+                    sprintf("The file %s was not found.", $filePath)
                 );
             }
-        } catch (EmptyContentException $e) {
+        } catch (\RuntimeException $e) {
             $output->writeln(
-                \sprintf("<error>%s</error>", $e->getMessage())
+                sprintf("<error>%s</error>", $e->getMessage())
             );
             exit;
         }
@@ -75,33 +103,25 @@ class BalancedBracesCommand extends Command
         ];
 
         $bracy = new Bracy(...$bracyParams);
-        $charsValidator = new CharsValidator(
-            $input->getOption('allowed-chars')
-        );
+        $allowedChars =  $input->getOption('allowed-chars');
+        $charsValidator = new CharsValidator($allowedChars);
         $balancedValidator = new BalancedValidator($charsValidator);
 
         try {
-            $isValid = $balancedValidator->isValid($bracy);
-            $response = $isValid ? 'balanced' : 'unbalanced';
-        } catch (EmptyContentException $e) {
-            $output->writeln(
-                \sprintf("<error>%s</error>", $e->getMessage())
-            );
-            exit;
-        } catch (\InvalidArgumentException $e) {
-            $output->writeln(
-                \sprintf("<error>%s</error>", $e->getMessage())
-            );
+            $isBalanced = $balancedValidator->isValid($bracy);
+            $response = $isBalanced ? 'balanced' : 'unbalanced';
+        } catch (EmptyContentException | \InvalidArgumentException $e) {
+            $output->writeln(sprintf("<error>%s</error>", $e->getMessage()));
             exit;
         } catch (\Throwable $e) {
             $output->writeln(
-                \sprintf("<error>%s</error>", $e->getMessage())
+                "<error>Internal server error. Please try again later.</error>"
             );
             exit;
         }
 
         $output->writeln(
-            \sprintf(
+            sprintf(
                 "<comment>Task completed. Brackets are %s.</comment>",
                 $response
             )
