@@ -1,4 +1,6 @@
 # BracyCLI
+[![Build Status](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/badges/build.png?b=code-review)](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/build-status/code-review)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/badges/quality-score.png?b=code-review)](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/?branch=code-review)
 
 CLI wrapper over stolnikov/bracy package.
 

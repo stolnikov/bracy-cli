@@ -14,46 +14,43 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class BalancedBracesCommand extends Command
 {
-
     protected function configure()
     {
-        // Fetch and initialize default constructor values from validator classes
         try {
+            // Fetch and initialize default constructor values from validator classes
             $defaults = $this->getDefaults();
+            list($openingChar, $closingChar, $allowedChars) = $defaults;
+
+            $this
+                ->setName('chkfile')
+                ->setDescription('Check for balanced brackets in a text file.')
+                ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path')
+                ->addOption(
+                    'opening-char',
+                    'o',
+                    InputOption::VALUE_OPTIONAL,
+                    'Opening character',
+                    $openingChar
+                )
+                ->addOption(
+                    'closing-char',
+                    'c',
+                    InputOption::VALUE_OPTIONAL,
+                    'Closing character',
+                    $closingChar
+                )
+                ->addOption(
+                    'allowed-chars',
+                    'a',
+                    InputOption::VALUE_OPTIONAL,
+                    'String of allowed chars excluding brace characters',
+                    $allowedChars
+                );
+
         } catch (\ReflectionException $e) {
             echo sprintf("<error>%s</error>", $e->getMessage());
-            exit;
         }
-
-        list($openingChar, $closingChar, $allowedChars) = $defaults;
-
-        $this
-            ->setName('chkfile')
-            ->setDescription('Check for balanced brackets in a text file.')
-            ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path')
-            ->addOption(
-                'opening-char',
-                'o',
-                InputOption::VALUE_OPTIONAL,
-                'Opening character',
-                $openingChar
-            )
-            ->addOption(
-                'closing-char',
-                'c',
-                InputOption::VALUE_OPTIONAL,
-                'Closing character',
-                $closingChar
-            )
-            ->addOption(
-                'allowed-chars',
-                'a',
-                InputOption::VALUE_OPTIONAL,
-                'String of allowed chars excluding brace characters',
-                $allowedChars
-            );
     }
-
 
     /**
      * Return default constructor values of validator classes.
@@ -113,10 +110,8 @@ class BalancedBracesCommand extends Command
                     $response
                 )
             );
-
         } catch (\RuntimeException | EmptyContentException | \InvalidArgumentException $e) {
             $output->writeln(sprintf("<error>%s</error>", $e->getMessage()));
-            exit;
         } catch (\Throwable $e) {
             $output->writeln(
                 "<error>Internal server error. Please try again later.</error>"
