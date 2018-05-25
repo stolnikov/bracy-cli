@@ -2,7 +2,7 @@
 [![Build Status](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/badges/build.png?b=code-review)](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/build-status/code-review)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/badges/quality-score.png?b=code-review)](https://scrutinizer-ci.com/g/stolnikov/bracy-cli/?branch=code-review)
 
-CLI wrapper over stolnikov/bracy package.
+CLI wrapper over [stolnikov/bracy package](https://github.com/stolnikov/bracy).
 
 # Requirements
 *  PHP >= 7.1

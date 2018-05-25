@@ -17,12 +17,11 @@ class BalancedBracesCommand extends Command
     protected function configure()
     {
         try {
-            // Fetch and initialize default constructor values from validator classes
             $defaults = $this->getDefaults();
             list($openingChar, $closingChar, $allowedChars) = $defaults;
 
             $this
-                ->setName('chkfile')
+                ->setName('checkfile')
                 ->setDescription('Check for balanced brackets in a text file.')
                 ->addArgument('fpath', InputArgument::REQUIRED, 'Unix file path')
                 ->addOption(
@@ -46,9 +45,9 @@ class BalancedBracesCommand extends Command
                     'String of allowed chars excluding brace characters',
                     $allowedChars
                 );
-
         } catch (\ReflectionException $e) {
-            echo sprintf("<error>%s</error>", $e->getMessage());
+            echo sprintf("%s", $e->getMessage());
+            exit(1);
         }
     }
 
@@ -56,6 +55,7 @@ class BalancedBracesCommand extends Command
      * Return default constructor values of validator classes.
      *
      * @return array
+     *
      * @throws \ReflectionException
      */
     private function getDefaults(): array
@@ -78,6 +78,9 @@ class BalancedBracesCommand extends Command
         return [$defaultOpeningChar, $defaultClosingChar, $defaultAllowedChars];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
@@ -89,10 +92,10 @@ class BalancedBracesCommand extends Command
                 );
             }
 
-            $text = file_get_contents($filePath);
+            $string = file_get_contents($filePath);
 
             $bracy = new Bracy(
-                $text,
+                $string,
                 $input->getOption('opening-char'),
                 $input->getOption('closing-char')
             );
@@ -103,10 +106,10 @@ class BalancedBracesCommand extends Command
             $balancedValidator = new BalancedValidator($charsValidator);
 
             $isBalanced = $balancedValidator->isValid($bracy);
-            $response = $isBalanced ? 'balanced' : 'unbalanced';
+            $response = $isBalanced ? '' : 'un';
             $output->writeln(
                 sprintf(
-                    "<comment>Task completed. Brackets are %s.</comment>",
+                    "<comment>Task completed. Brackets are %sbalanced.</comment>",
                     $response
                 )
             );
